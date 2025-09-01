@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather App by Darshan</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #83a4d4, #b6fbff);
+      color: #333;
+      text-align: center;
+      padding: 50px;
+    }
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      width: 80%;
+      font-size: 16px;
+    }
+    #weatherResult {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Weather App</h1>
+    <p>Enter a city to get current weather data</p>
+    <input type="text" id="cityInput" placeholder="Enter city name" />
+    <button onclick="getWeather()">Get Weather</button>
+    <div id="weatherResult"></div>
+  </div>
+
+  <script>
+    async function getWeather() {
+      const apiKey = 'YOUR_API_KEY'; // Replace with your OpenWeatherMap API key
+      const city = document.getElementById('cityInput').value;
+      const resultDiv = document.getElementById('weatherResult');
+
+      if (!city) {
+        resultDiv.innerHTML = '<p>Please enter a city name.</p>';
+        return;
+      }
+
+      try {
+        const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`);
+        const data = await res.json();
+
+        if (data.cod === '404') {
+          resultDiv.innerHTML = '<p>City not found. Try again.</p>';
+          return;
+        }
+
+        const { name, main, weather } = data;
+        resultDiv.innerHTML = `
+          <h2>${name}</h2>
+          <p>Temperature: ${main.temp}°C</p>
+          <p>Weather: ${weather[0].description}</p>
+        `;
+      } catch (error) {
+        resultDiv.innerHTML = '<p>Error fetching weather data.</p>';
+        console.error(error);
+      }
+    }
+  </script>
+
+<footer>
+Made By Darshan Wahurwagh
+</footer>
+</body>
+</html>
